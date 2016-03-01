@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source /usr/local/Reductor/etc/const
+
 BACKUP_DIR="/var/lib/reductor/backups"
 
 make_name() {
