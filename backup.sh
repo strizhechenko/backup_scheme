@@ -2,36 +2,46 @@
 
 . /usr/local/Reductor/etc/const
 
+BACKUP_DIR="/var/lib/reductor/backups"
+
 make_name() {
 	local kind
 	kind="$1"
 	case $kind in
 	hourly )
-		date +/var/lib/reductor/backups/last_24_hours/%H.tar.gz
+		date +$BACKUP_DIR/last_24_hours/%H.tar.gz
 		;;
 	daily )
-		date +/var/lib/reductor/backups/last_30_days/%d.tar.gz
+		date +$BACKUP_DIR/last_30_days/%d.tar.gz
 		;;
 	monthly )
-		date +/var/lib/reductor/backups/last_12_month/%m.tar.gz
+		date +$BACKUP_DIR/last_12_month/%m.tar.gz
 		;;
 	yearly )
-		date +/var/lib/reductor/backups/yearly/%Y.tar.gz
+		date +$BACKUP_DIR/yearly/%Y.tar.gz
 		;;
 	static )
-		date +/var/lib/reductor/backups/all/%Y.%m.%d_%H.%M.tar.gz
+		date +$BACKUP_DIR/all/%Y.%m.%d_%H.%M.tar.gz
 		;;
 	esac
 }
 
-name="$(make_name static)"
-mkdir -p "${name%/*}"
-tar cfz "$name" $DUMPXML $LISTDIR
-for kind in hourly daily monthly yearly; do
-	echo "# $kind"
-	tmp_name="$(make_name $kind)"
-	mkdir -p "${tmp_name%/*}"
-	ln -vf "$name" "$tmp_name"
-done
+make_links() {
+	local name
+	name=$1
+	for kind in hourly daily monthly yearly; do
+		echo "# $kind"
+		tmp_name="$(make_name $kind)"
+		mkdir -p "${tmp_name%/*}"
+		ln -vf "$name" "$tmp_name"
+	done
+}
 
-find /var/lib/reductor/backups/all/ -type f -name "*.tar.gz" -links 1 -exec rm -vf {} \;
+delete_useless() {
+	find /var/lib/reductor/backups/all/ -type f -name "*.tar.gz" -links 1 -exec rm -vf {} \;
+}
+
+name="$(make_name static)"
+make_backup "$name" "$DUMPXML" "$LISTDIR"
+make_links
+delete_useless
