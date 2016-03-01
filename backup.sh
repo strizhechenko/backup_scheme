@@ -26,6 +26,11 @@ make_name() {
 	esac
 }
 
+make_backup() {
+	mkdir -p "${1%/*}"
+	tar cfz "$@"
+}
+
 make_links() {
 	local name
 	name=$1
