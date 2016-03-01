@@ -3,7 +3,8 @@
 . /usr/local/Reductor/etc/const
 
 make_name() {
-	local kind="$1"
+	local kind
+	kind="$1"
 	case $kind in
 	hourly )
 		date +/var/lib/reductor/backups/last_24_hours/%H.tar.gz
@@ -19,6 +20,7 @@ make_name() {
 		;;
 	static )
 		date +/var/lib/reductor/backups/all/%Y.%m.%d_%H.%M.tar.gz
+		;;
 	esac
 }
 
