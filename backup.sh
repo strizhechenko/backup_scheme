@@ -43,7 +43,7 @@ make_links() {
 }
 
 delete_useless() {
-	find /var/lib/reductor/backups/all/ -type f -name "*.tar.gz" -links 1 -exec rm -vf {} \;
+	find /var/lib/reductor/backups/all/ -type f -name "*.tar.gz" -links 1 -delete
 }
 
 name="$(make_name static)"
