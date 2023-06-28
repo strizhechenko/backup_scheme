@@ -5,7 +5,9 @@
 ## Как правильно забирать такие бэкапы
 
 ```
-rsync -aH --delete --progress user@system-where-app-is-running:/var/backups/place-where-app-stores-local-backups/ /remote/backup_system/backups/directory-dedicated-for-app-backups/
+rsync -aH --delete --progress \
+   user@system-where-app-is-running:/var/backups/place-where-app-stores-local-backups/ \
+  /remote/backup_system/backups/directory-dedicated-for-app-backups/
 ```
 
 - Ротация бэкапов производится только локально и ей _нужно_ доверять (поэтому флаг `--delete`).
